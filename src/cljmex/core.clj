@@ -56,6 +56,11 @@
                           (mxGetM parg) (csym :>) 0)
                           (str name " should be non-empty")))
         )
+      (if (args :square)
+        (str 
+          (mexAssert (str (mxGetN parg) (csym :eq) (mxGetM parg))
+                          (str name " should be square")))
+        )
       (if (= format :single)
         (str 
           (mexAssert (str (mxGetN parg) (csym :eq) 1 (csym :and) 
@@ -110,8 +115,8 @@
         (defStruct name type :sparse)
         (str rows (csym :assign) (mxGetM parg) ";" mnewline)
         (str cols (csym :assign) (mxGetN parg) ";" mnewline)
-        (str p (csym :assign) (getPointer parg :int "mxGetJc") ";" mnewline)
-        (str i (csym :assign) (getPointer parg :int "mxGetIr") ";" mnewline)
+        (str p (csym :assign) (getPointer parg :index "mxGetJc") ";" mnewline)
+        (str i (csym :assign) (getPointer parg :index "mxGetIr") ";" mnewline)
         (str x (csym :assign) (getPointer parg type "mxGetPr") ";" mnewline)
         (if (= type :complex) (str z (csym :assign) (getPointer parg type "mxGetPi") ";" mnewline))
         (str nz (csym :assign) p "[" (mxGetN parg) "];" mnewline)
@@ -211,6 +216,7 @@
         :matrix (evalOutMatrix name type parg args) 
         :row-vector (evalOutMatrix name type parg args) 
         :column-vector (evalOutMatrix name type parg) 
+        :manual ""
         (assert false (str "missing or unsupported output format " format))
       )
     )
@@ -238,7 +244,7 @@
       (defMacro "cljmex_start"
             (str 
               (evalfun "cljmex_mex_fun") ";" mnewline
-              (evalfun "cljmex_check_args" (count inArgs) (count outArgs) filename) ";" mnewline
+              (evalfun "cljmex_check_args" (count inArgs) (count outArgs) (str "\"" filename "\"")) ";" mnewline
               (evalfun "cljmex_setup") ";" mnewline
               mnewline
               inArgStr

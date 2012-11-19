@@ -58,8 +58,8 @@ typedef struct {
 /* 
  * Signal error and return to MATLAB
  */
-#define cljmex_error(fileName)\
-    mexErrMsgTxt ("fileName error");\
+#define cljmex_error(msg)\
+    mexErrMsgTxt(msg);\
 
 /* 
  * Start MEX function
@@ -80,9 +80,9 @@ typedef struct {
  */
 #define cljmex_check_args(nrInArgs,nrOutArgs,fileName)\
     if (nargin != nrInArgs ||  nargout != nrOutArgs) {\
-        mexPrintf("fileName error: Called with %d/%d input arguments and %d/%d output arguments",\
-                nargin,nrInArgs,nargout,nrOutArgs);\
-        cljmex_error(fileName);\
+        mexPrintf("%s error: Called with %d/%d input arguments and %d/%d output arguments\n",\
+                fileName,nargin,nrInArgs,nargout,nrOutArgs);\
+        cljmex_error("argument error");\
     }\
 
 /* 

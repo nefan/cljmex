@@ -20,4 +20,5 @@
 
 (defproject cljmex "0.0.1-SNAPSHOT"
   :description "MATLAB Mex file generator"
+  :url "http://github.com/nefan/cljmex"
   :dependencies [[org.clojure/clojure "1.3.0"]])

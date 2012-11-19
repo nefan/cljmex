@@ -32,6 +32,7 @@
              })
 (def entry-types {
              :int "mInt"
+             :index "mInt"
              :real "Entry"
              :complex "Entry"
              :logical "bool"
@@ -48,11 +49,11 @@
              })
 
 (def typeCheckFuns {
-           :int "mxIsNumeric"
+           :int "mxIsInt64"
            :real "!mxIsComplex"
            :complex "mxIsComplex"
            :logical "mxIsLogical"
-           :string "mxIsString"
+           :string "mxIsChar"
            })
 
 (def csym {

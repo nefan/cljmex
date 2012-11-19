@@ -42,7 +42,7 @@
 
 (defn defVal [name parg type mexFun]
   (let [ctype (ctypes type)]
-    (str ctype " " name (csym :assign) "*(" (getPointer parg type mexFun) ");" mnewline)))
+    (str ctype " " name (csym :assign) "(" ctype ")(*(" (getPointer parg type mexFun) "));" mnewline)))
 
 (defn defMacro [name s]
   (str "#define " (evalfun name) " " mnewline s \newline))
