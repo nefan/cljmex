@@ -2,7 +2,7 @@
  * This file is part of cljmex.
  *
  * Copyright (C) 2012, Stefan Sommer (sommer@diku.dk)
- * https://github.com/nefan/cljmex.git
+ * https://github.com/nefan/cljmex
  *
  * cljmex is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

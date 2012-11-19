@@ -1,5 +1,5 @@
 cljmex, Copyright (C) 2012, Stefan Sommer (sommer@diku.dk)
-https://github.com/nefan/cljmex.git
+https://github.com/nefan/cljmex
 
 --------------------------------------------------------------------------------
 
@@ -20,11 +20,29 @@ https://github.com/nefan/cljmex.git
  
 --------------------------------------------------------------------------------
 
-Installation intructions:
-...
+## Dependencies and Installation Intructions:
 
-Dependencies:
-...
+Basically, only clojure and leiningen are needed to use cljmex. Check out the
+git repository 
 
-Installation:
-...
+    git clone https://github.com/nefan/cljmex.git
+
+and make sure clojure and leiningen are installed. On Ubuntu,
+
+    sudo apt-get install clojure1.4 leiningen
+
+will get the packages and make sure clojure is in your path. Then
+
+    cd cljmex
+    lein deps
+
+and you can compile the examples
+
+    cd examples
+    make
+
+The example file will now run with e.g.
+
+    matlab -r example
+
+

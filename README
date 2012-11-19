@@ -1,5 +1,5 @@
 cljmex, Copyright (C) 2009-2012, Stefan Sommer (sommer@diku.dk)
-https://github.com/nefan/cljmex.git
+https://github.com/nefan/cljmex
 
 --------------------------------------------------------------------------------
 
@@ -24,17 +24,34 @@ https://github.com/nefan/cljmex.git
 
 MATLAB Mex file generator
 
-The project website is https://github.com/nefan/cljmex.git
+The project website is https://github.com/nefan/cljmex
 
 Stefan Sommer (sommer@diku.dk), November 2012.
 
+
 ## Usage
 
-...
+Instead of writing ugly C-code yourself to pass data between MATLAB and
+mex-files, you write a short clojure file. Executing the clojure file then
+produces a header file with macros for passing the data back and forth. The
+C-part of the corresponding mex-file will then look like:
+
+#include "mexfile.cljmex.hpp"
+
+cljmex_start()
+
+    // regular C-code
+    ...
+
+cljmex_end()
+
+See also the examples files in the examples/ directory.
+
 
 ## License
 
 Everything here is GPL.
+
 
 ## Installation
 
@@ -43,7 +60,11 @@ Confer the INSTALL file.
 
 ## Documentation
 
-...
+For now, look at the files in the examples/ directory. cljmex contains more
+parameters and input/output formats than used in the examples. More will be
+added as needed, and, eventually, the available parameters may be documented.
+It's very easy to add new functionality (thanks, clojure), so feel free to send
+me a patch or an email with a wish list.
 
 
 ## News
