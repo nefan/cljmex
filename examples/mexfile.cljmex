@@ -1,0 +1,73 @@
+; cljmex definition file for cljmex example 'mexfile.cpp'
+(use 'cljmex.core)
+
+; init cljmex
+(cljmex-init "mexfile")
+
+; define input arguments
+(argument :name 'm
+          :type :int
+          :format :single
+          )
+
+(argument :name 'n
+          :type :int
+          :format :single
+          )
+
+(argument :name 'R
+          :type :real
+          :format :sparse
+          :rows 'm
+          :columns 'n
+          :nonempty true
+        )
+
+(argument :name 'C
+          :type :complex
+          :format :sparse
+          :rows 'm
+          :square true
+          :nonempty true
+          :zip true
+        )
+
+(argument :name 'p
+          :type :int
+          :format :row-vector
+          :columns 'n
+          )
+
+(argument :name 'pred
+          :type :logical
+          :format :single
+          )
+
+(argument :name 'name
+          :type :string
+          )
+
+; define output arguments
+(output :name 'outM
+        :type :complex
+        :format :matrix
+        :rows 'm
+        :columns 'm
+        :unzip 'S
+        )
+
+(output :name 'outv
+        :type :real
+        :format :row-vector
+        :rows 'n
+        :copy 'v
+        )
+
+(output :name 'outTime
+        :type :real
+        :format :single
+        :copy 'time
+        )
+
+; close cljmex
+(cljmex-end)

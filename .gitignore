@@ -3,3 +3,7 @@
 
 # libs
 lib/
+
+# objects, generated cljmex headers, ...
+*.mexa64
+*.cljmex.hpp

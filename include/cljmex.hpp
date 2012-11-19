@@ -91,7 +91,7 @@ typedef struct {
 #define cljmex_setup()\
     mxClassID mx_int;\
     /* determine size of the MATLAB integer */\
-    if (sizeof (Long) == sizeof (INT32_T))\
+    if (sizeof (long) == sizeof (INT32_T))\
         mx_int = mxINT32_CLASS;\
     else\
         mx_int = mxINT64_CLASS;\
