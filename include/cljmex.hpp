@@ -4,55 +4,55 @@
 #include "mex.h"
 #include <complex>
 
-typedef long mInt;
-typedef double Entry;
-typedef std::complex<Entry> cljmex_complex;
+typedef long cljmexInt;
+typedef double cljmexEntry;
+typedef std::complex<cljmexEntry> cljmexComplex;
 
 /* 
  * various structs for extracted data 
  */
 typedef struct {
-    mInt rows;
-    mInt cols;
-    mInt *x; 
+    cljmexInt rows;
+    cljmexInt cols;
+    cljmexInt *x; 
 } cljmex_int_matrix;
 
 typedef struct {
-    mInt rows;
-    mInt cols;
-    Entry *x; 
+    cljmexInt rows;
+    cljmexInt cols;
+    cljmexEntry *x; 
 } cljmex_real_matrix;
 
 typedef struct {
-    mInt rows;
-    mInt cols;
-    Entry *x; 
-    Entry *z; 
-} cljmex_complex_matrix;
+    cljmexInt rows;
+    cljmexInt cols;
+    cljmexEntry *x; 
+    cljmexEntry *z; 
+} cljmexComplex_matrix;
 
 typedef struct {
-    mInt rows;
-    mInt cols;
-    mInt *p;
-    mInt *i;
-    mInt nz;
-    Entry *x; 
+    cljmexInt rows;
+    cljmexInt cols;
+    cljmexInt *p;
+    cljmexInt *i;
+    cljmexInt nz;
+    cljmexEntry *x; 
 } cljmex_real_sparse_matrix;
 
 typedef struct {
-    mInt rows;
-    mInt cols;
-    mInt *p;
-    mInt *i;
-    mInt nz;
-    Entry *x; 
-    Entry *z; 
-    cljmex_complex *v; // zipped copy of x and z
-} cljmex_complex_sparse_matrix;
+    cljmexInt rows;
+    cljmexInt cols;
+    cljmexInt *p;
+    cljmexInt *i;
+    cljmexInt nz;
+    cljmexEntry *x; 
+    cljmexEntry *z; 
+    cljmexComplex *v; // zipped copy of x and z
+} cljmexComplex_sparse_matrix;
 
 typedef struct {
     char *s;
-    mInt len;
+    cljmexInt len;
 } cljmex_string;
 
 /* 

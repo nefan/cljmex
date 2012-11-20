@@ -209,6 +209,52 @@
          ]
     )))
 
+(defn evalOutSparse [name type parg args]
+  (if-supported #{:real :complex} type :sparse
+    (let [rows (str name ".rows")
+          cols (str name ".cols")
+          p (str name ".p")
+          i (str name ".i")
+          x (str name ".x")
+          z (str name ".z")
+          v (str name ".v")
+          nz (str name ".nz")
+          nrRows (args :rows)
+          nrCols (args :columns)
+          nrNz (args :nz)]
+      (assert (and nrRows nrCols nrNz) (str "invalid dimensions or nz for sparse output " name))
+      [(str
+         parg (csym :assign) (evalfun "mxCreateSparse" nrRows nrCols nrNz (mtypes type)) ";" mnewline
+        (defStruct name type :sparse)
+        (str rows (csym :assign) (mxGetM parg) ";" mnewline)
+        (str cols (csym :assign) (mxGetN parg) ";" mnewline)
+        (str p (csym :assign) (getPointer parg :index "mxGetJc") ";" mnewline)
+        (str i (csym :assign) (getPointer parg :index "mxGetIr") ";" mnewline)
+        (str x (csym :assign) (getPointer parg type "mxGetPr") ";" mnewline)
+        (if (= type :complex) (str z (csym :assign) (getPointer parg type "mxGetPi") ";" mnewline))
+        (str nz (csym :assign) nrNz ";" mnewline))
+       (case type
+         :real (if-let [copy (args :copy)]
+                 (str "for (int k=0; k<" nz "; k++)" mnewline
+                      \tab x "[k]" (csym :assign) copy ".x[k];" mnewline)
+                 ""
+                 )
+         :complex
+           (let [copy (args :copy)
+                 unzip (args :unzip)]
+             (if (or copy unzip)
+               (str "for (int k=0; k<" nz "; k++) {" mnewline
+                    (if copy
+                      (str \tab x "[k]" (csym :assign) (str copy ".x[k]") ";" mnewline
+                           \tab z "[k]" (csym :assign) (str copy ".z[k]") ";" mnewline)
+                      (str \tab x "[k]" (csym :assign) (evalfun "real" (str unzip ".v[k]")) ";" mnewline
+                           \tab z "[k]" (csym :assign) (evalfun "imag" (str unzip ".v[k]")) ";" mnewline))
+                      "}" mnewline)
+                 ""
+                 )))
+       ]
+    )))
+
 (defn evalOutArg [arg argNr]
   (let [args (apply hash-map arg)
         {:keys [name type format]} args
@@ -216,7 +262,7 @@
     (case format
         :single (evalOutSingle name type parg args)
 ;        :string (evalOutString name type parg args)
-;        :sparse (evalOutSparse name type parg args)
+        :sparse (evalOutSparse name type parg args)
         :matrix (evalOutMatrix name type parg args) 
         :row-vector (evalOutMatrix name type parg args) 
         :column-vector (evalOutMatrix name type parg) 

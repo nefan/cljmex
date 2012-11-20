@@ -24,17 +24,17 @@
 (def mnewline "\\\n")
 
 (def ctypes {
-             :int "mInt"
-             :real "Entry"
-             :complex "cljmex_complex"
+             :int "cljmexInt"
+             :real "cljmexEntry"
+             :complex "cljmexComplex"
              :logical "bool"
              :string "char"
              })
 (def entry-types {
-             :int "mInt"
-             :index "mInt"
-             :real "Entry"
-             :complex "Entry"
+             :int "cljmexInt"
+             :index "cljmexInt"
+             :real "cljmexEntry"
+             :complex "cljmexEntry"
              :logical "bool"
              :string "char"
              })
@@ -74,8 +74,8 @@
                     :sparse "cljmex_real_sparse_matrix"
                     }
              :complex {
-                       :matrix "cljmex_complex_matrix"
-                       :sparse "cljmex_complex_sparse_matrix"
+                       :matrix "cljmexComplex_matrix"
+                       :sparse "cljmexComplex_sparse_matrix"
                        }
              })
 
