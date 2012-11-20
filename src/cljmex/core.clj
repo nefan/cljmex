@@ -122,7 +122,7 @@
         (str nz (csym :assign) p "[" (mxGetN parg) "];" mnewline)
         (if (and (= type :complex) (args :zip))
           (str 
-            (str v (csym :assign) (malloc :complex nz) ";" mnewline)
+            (str v (csym :assign) (malloc :complex :complex nz) ";" mnewline)
             (str "for (int k=0; k<" nz "; k++)" mnewline
                  \tab v "[k]" (csym :assign) (evalfun (ctypes :complex)
                                                       (str x "[k]")
@@ -135,8 +135,12 @@
           s (str name ".s")]
       (str
         (defStruct name type :string)
-        (str len (csym :assign) (mxGetN parg) "*" (mxGetM parg) "+1;" mnewline)
-        (str s (csym :assign) (malloc type len) ";" mnewline)
+        (str len (csym :assign)
+             (mxGetN parg) "*"
+             (mxGetM parg) "*"
+             (evalfun "sizeof" (mtypes :char))
+             "+1;" mnewline)
+        (str s (csym :assign) (malloc type false len) ";" mnewline)
         (evalfun "mxGetString" parg s len) ";" mnewline)
       )
     ))

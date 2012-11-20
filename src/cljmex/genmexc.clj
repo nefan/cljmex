@@ -53,9 +53,11 @@
 (defn pargout [argNr]
   (str "pargout[" argNr "]"))
 
-(defn malloc [type len]
-  (let [ctype (ctypes type)]
-    (str "(" ctype "*)" (evalfun "mxMalloc" (str len "*" (evalfun "sizeof" ctype))))))
+(defn malloc [rtype mtype len]
+  (let [crtype (ctypes rtype)
+        cmtype (ctypes mtype)
+        mult (if mtype (str "*" (evalfun "sizeof" cmtype)) "")]
+    (str "(" crtype "*)" (evalfun "mxMalloc" (str len mult)))))
 
 (defn getMalloc [name type len]
   (let [ctype (ctypes type)]

@@ -45,7 +45,8 @@
              :real "mxREAL"
              :complex "mxCOMPLEX"
 ;             :logical 
-;             :string 
+;             :string
+             :char  "mxChar"
              })
 
 (def typeCheckFuns {

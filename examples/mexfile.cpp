@@ -37,7 +37,8 @@ cljmex_start()
     // The :zip flags makes cljmex copy complex data into
     // std::complex arrays.
 
-    mexPrintf("The test %s got two ints m and n with values %d and %d.\n",name,m,n);
+    mexPrintf("The test %s ",name);
+    mexPrintf("got two ints m and n with values %d and %d.\n",m,n);
 
     // sum the entries in the sparse array R
     double sumR = 0;
