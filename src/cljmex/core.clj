@@ -166,7 +166,7 @@
   )
 
 (defn evalOutSingle [name type parg args]
-  (if-supported #{:int :real} type :single
+  (if-supported #{:real} type :single
     [(str parg (csym :assign) (evalfun "mxCreateDoubleMatrix" 1 1 (mtypes type)) ";" mnewline)
      (if-let [copy (args :copy)]
        (str "*" (getPointer parg type "mxGetPr") (csym :assign) copy ";" mnewline)
