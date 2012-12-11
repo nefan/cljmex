@@ -255,6 +255,12 @@
        ]
     )))
 
+(defn evalOutManual [name parg]
+  [(str "mxArray*& " name (csym :assign) parg ";" mnewline)
+   ""
+   ]
+  )
+
 (defn evalOutArg [arg argNr]
   (let [args (apply hash-map arg)
         {:keys [name type format]} args
@@ -266,7 +272,7 @@
         :matrix (evalOutMatrix name type parg args) 
         :row-vector (evalOutMatrix name type parg args) 
         :column-vector (evalOutMatrix name type parg) 
-        :manual ""
+        :manual (evalOutManual name parg)
         (assert false (str "missing or unsupported output format " format))
       )
     )
