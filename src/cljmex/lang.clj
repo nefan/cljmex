@@ -49,6 +49,13 @@
              :char  "mxChar"
              })
 
+(def mclasses {
+;             :int 
+             :real "mxDOUBLE_CLASS"
+;             :complex
+;             :logical 
+             })
+
 (def typeCheckFuns {
            :int "mxIsInt64"
            :real "!mxIsComplex"
@@ -62,6 +69,7 @@
            :> " > "
            :assign " = "
            :and " && "
+           :array "[]"
            })
 
 (def structs {
@@ -72,6 +80,7 @@
              :real {
                     :matrix "cljmex_real_matrix"
                     :sparse "cljmex_real_sparse_matrix"
+                    :multidimarray "cljmex_real_multidimarray"
                     }
              :complex {
                        :matrix "cljmexComplex_matrix"

@@ -24,6 +24,12 @@ typedef struct {
 } cljmex_real_matrix;
 
 typedef struct {
+    const int *dims;
+    const cljmexInt *dimsI; // for indexing
+    cljmexEntry *x; 
+} cljmex_real_multidimarray;
+
+typedef struct {
     cljmexInt rows;
     cljmexInt cols;
     cljmexEntry *x; 
@@ -78,10 +84,31 @@ typedef struct {
 /* 
  * Check number of input and output arguments
  */
-#define cljmex_check_args(nrInArgs,nrOutArgs,fileName)\
-    if (nargin != nrInArgs ||  nargout != nrOutArgs) {\
-        mexPrintf("%s error: Called with %d/%d input arguments and %d/%d output arguments\n",\
-                fileName,nargin,nrInArgs,nargout,nrOutArgs);\
+#define cljmex_check_inargs(nrInArgs,fileName)\
+    if (nargin != nrInArgs) {\
+        mexPrintf("%s error: Called with %d/%d input arguments\n",\
+                fileName,nargin,nrInArgs);\
+        cljmex_error("argument error");\
+    }\
+
+#define cljmex_check_outargs(nrOutArgs,fileName)\
+    if (nargout != nrOutArgs) {\
+        mexPrintf("%s error: Called with %d/%d output arguments\n",\
+                fileName,nargout,nrOutArgs);\
+        cljmex_error("argument error");\
+    }\
+
+#define cljmex_check_varinargs(nrInArgs,fileName)\
+    if (nargin > nrInArgs) {\
+        mexPrintf("%s error: Called with %d of max. %d input arguments\n",\
+                fileName,nargin,nrInArgs);\
+        cljmex_error("argument error");\
+    }\
+
+#define cljmex_check_varoutargs(nrOutArgs,fileName)\
+    if (nargout > nrOutArgs) {\
+        mexPrintf("%s error: Called with %d of max. %d output arguments\n",\
+                fileName,nargout,nrOutArgs);\
         cljmex_error("argument error");\
     }\
 

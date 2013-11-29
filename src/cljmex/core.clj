@@ -26,6 +26,9 @@
 (def inArgs ())
 (def outArgs ())
 
+; global arguments
+(declare globalArgs)
+
 ; define input argument
 (defn argument [& args]
   (def inArgs (cons args inArgs)))
@@ -209,6 +212,39 @@
          ]
     )))
 
+(defn evalOutMultidimArray [name type parg args]
+  (if-supported #{:real} type :single
+    (let [dims (str name ".dims")
+          dimsI (str name ".dimsI")
+          dimsa (str name "dimsa") ; local variables for initialization
+          dimsIa (str name "dimsIa") ; local variables for initialization
+          x (str name ".x")
+          dimsspec (args :dims)
+          nrDims (count dimsspec)
+          prod #(str %1 "*" %2)
+          comma #(str %1 "," %2)
+          dimsIspec (reduce comma (map #(reduce prod (take %1 dimsspec)) (range 1 nrDims)))
+          ]
+      (assert (and dimsspec) (str "invalid dimension for output " name))
+      [(str 
+         (str "int " dimsa (csym :array) (csym :assign) "{" (reduce comma dimsspec) "};" mnewline)
+         (str (ctypes :int) " " dimsIa (csym :array) (csym :assign) "{" dimsIspec "};" mnewline)
+         parg (csym :assign) (evalfun "mxCreateNumericArray" nrDims dimsa (mclasses type) (mtypes type)) ";" mnewline
+         (defStruct name type :multidimarray)
+         (str dims (csym :assign) dimsa ";" mnewline)
+         (str dimsI (csym :assign) dimsIa ";" mnewline)
+         (str x (csym :assign) (getPointer parg type "mxGetPr") ";" mnewline)
+         )
+       (case type
+         :real (if-let [copy (args :copy)]
+                 (str "for (int k=0; k<" (reduce prod dimsspec) "; k++)" mnewline
+                      \tab x "[k]" (csym :assign) copy "[k];" mnewline)
+                 ""
+                 ))
+         ]
+    )))
+
+
 (defn evalOutSparse [name type parg args]
   (if-supported #{:real :complex} type :sparse
     (let [rows (str name ".rows")
@@ -270,6 +306,7 @@
 ;        :string (evalOutString name type parg args)
         :sparse (evalOutSparse name type parg args)
         :matrix (evalOutMatrix name type parg args) 
+        :multidimarray (evalOutMultidimArray name type parg args) 
         :row-vector (evalOutMatrix name type parg args) 
         :column-vector (evalOutMatrix name type parg) 
         :manual (evalOutManual name parg)
@@ -294,13 +331,19 @@
                                       (str (second l) copy mnewline)]))
                                  '("" "")
                                  (reverse outArgs))
+        {:keys [varargsin varargsout]} globalArgs
         ]
     (def copyOut copyOut)
     (str
       (defMacro "cljmex_start"
             (str 
               (evalfun "cljmex_mex_fun") ";" mnewline
-              (evalfun "cljmex_check_args" (count inArgs) (count outArgs) (str "\"" filename "\"")) ";" mnewline
+              (if-not varargsin
+                (str (evalfun "cljmex_check_inargs" (count inArgs) (str "\"" filename "\"")) ";" mnewline)
+                (str (evalfun "cljmex_check_varinargs" varargsin (str "\"" filename "\"")) ";" mnewline))
+              (if-not varargsout
+                (str (evalfun "cljmex_check_outargs" (count outArgs) (str "\"" filename "\"")) ";" mnewline)
+                (str (evalfun "cljmex_check_varoutargs" varargsout (str "\"" filename "\"")) ";" mnewline))
               (evalfun "cljmex_setup") ";" mnewline
               mnewline
               inArgStr
@@ -314,7 +357,8 @@
               "}" mnewline)))
 
 ; init root bindings
-(defn cljmex-init [fname]
+(defn cljmex-init [fname & args]
+  (def globalArgs (apply hash-map args))
   (def filename fname)
   (def inArgs ())
   (def outArgs ()))
